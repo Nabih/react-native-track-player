@@ -240,13 +240,13 @@ public class MetadataManager {
         List<Integer> compact = new ArrayList<>();
         builder.mActions.clear();
 
-        List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
-        if(notification != null) {
-            // Adds the media buttons to the notification
-            for (int action : notification) {
-                Log.d(Utils.LOG, "action: " + action);
-            }
-        }
+        // List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
+        // if(notification != null) {
+        //     // Adds the media buttons to the notification
+        //     for (int action : notification) {
+        //         Log.d(Utils.LOG, "action: " + action);
+        //     }
+        // }
 
         // Adds the media buttons to the notification
 
