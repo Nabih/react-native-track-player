@@ -43,7 +43,7 @@ public class MetadataManager {
     private final MusicManager manager;
     private final MediaSessionCompat session;
 
-    private Bundle options;
+    private Bundle options = null;
 
     private int ratingType = RatingCompat.RATING_NONE;
     private int jumpForwardInterval = 15;
@@ -239,14 +239,47 @@ public class MetadataManager {
         boolean playing = Utils.isPlaying(state);
         List<Integer> compact = new ArrayList<>();
         builder.mActions.clear();
-
-        // List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
-        // if(notification != null) {
-        //     // Adds the media buttons to the notification
-        //     for (int action : notification) {
-        //         Log.d(Utils.LOG, "action: " + action);
-        //     }
-        // }
+        
+        if (this.options != null) {
+            List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
+            if(notification != null) {
+                // Adds the media buttons to the notification
+                for (int action : notification) {
+                    Log.d(Utils.LOG, "action: " + action);
+                    switch (action) {
+                        case (int) PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS:
+                            addAction(previousAction, action, compact);
+                            break;
+                        case (int) PlaybackStateCompat.ACTION_REWIND:
+                            addAction(rewindAction, action, compact);
+                            break;
+                        case (int) PlaybackStateCompat.ACTION_PAUSE:
+                        case (int) PlaybackStateCompat.ACTION_PLAY:
+                            if (playPause) {
+                                break;
+                            }
+                            playPause = true;
+                            if (playing) {
+                                addAction(pauseAction, action, compact);
+                            } else {
+                                addAction(playAction, action, compact);
+                            }
+                            break;
+                        case (int) PlaybackStateCompat.ACTION_FAST_FORWARD:
+                            addAction(forwardAction, action, compact);
+                            break;
+                        case (int) PlaybackStateCompat.ACTION_SKIP_TO_NEXT:
+                            addAction(nextAction, action, compact);
+                            break;
+                        case (int) PlaybackStateCompat.ACTION_STOP:
+                            addAction(stopAction, action, compact);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
 
         // Adds the media buttons to the notification
 
