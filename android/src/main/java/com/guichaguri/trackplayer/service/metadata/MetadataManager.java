@@ -280,22 +280,22 @@ public class MetadataManager {
                     }
                 }
             }
-        }
-
-        // Adds the media buttons to the notification
-
-        addAction(previousAction, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, compact);
-        addAction(rewindAction, PlaybackStateCompat.ACTION_REWIND, compact);
-
-        if(playing) {
-            addAction(pauseAction, PlaybackStateCompat.ACTION_PAUSE, compact);
         } else {
-            addAction(playAction, PlaybackStateCompat.ACTION_PLAY, compact);
-        }
+            // Adds the media buttons to the notification
 
-        addAction(stopAction, PlaybackStateCompat.ACTION_STOP, compact);
-        addAction(forwardAction, PlaybackStateCompat.ACTION_FAST_FORWARD, compact);
-        addAction(nextAction, PlaybackStateCompat.ACTION_SKIP_TO_NEXT, compact);
+            addAction(previousAction, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, compact);
+            addAction(rewindAction, PlaybackStateCompat.ACTION_REWIND, compact);
+
+            if(playing) {
+                addAction(pauseAction, PlaybackStateCompat.ACTION_PAUSE, compact);
+            } else {
+                addAction(playAction, PlaybackStateCompat.ACTION_PLAY, compact);
+            }
+
+            addAction(stopAction, PlaybackStateCompat.ACTION_STOP, compact);
+            addAction(forwardAction, PlaybackStateCompat.ACTION_FAST_FORWARD, compact);
+            addAction(nextAction, PlaybackStateCompat.ACTION_SKIP_TO_NEXT, compact);
+        }
 
         // Prevent the media style from being used in older Huawei devices that don't support custom styles
         if(!Build.MANUFACTURER.toLowerCase().contains("huawei") || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
