@@ -32,6 +32,7 @@ import com.guichaguri.trackplayer.service.models.Track;
 import com.guichaguri.trackplayer.service.player.ExoPlayback;
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 /**
  * @author Guichaguri
@@ -41,6 +42,8 @@ public class MetadataManager {
     private final MusicService service;
     private final MusicManager manager;
     private final MediaSessionCompat session;
+
+    private Bundle options;
 
     private int ratingType = RatingCompat.RATING_NONE;
     private int jumpForwardInterval = 15;
@@ -104,6 +107,8 @@ public class MetadataManager {
         List<Integer> capabilities = options.getIntegerArrayList("capabilities");
         List<Integer> notification = options.getIntegerArrayList("notificationCapabilities");
         List<Integer> compact = options.getIntegerArrayList("compactCapabilities");
+
+        this.options = options;
 
         actions = 0;
         compactActions = 0;
@@ -234,6 +239,14 @@ public class MetadataManager {
         boolean playing = Utils.isPlaying(state);
         List<Integer> compact = new ArrayList<>();
         builder.mActions.clear();
+
+        List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
+        if(notification != null) {
+            // Adds the media buttons to the notification
+            for (int action : notification) {
+                Log.d(Utils.LOG, "action: " + action);
+            }
+        }
 
         // Adds the media buttons to the notification
 
