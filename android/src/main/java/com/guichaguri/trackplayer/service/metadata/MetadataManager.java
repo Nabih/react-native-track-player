@@ -239,7 +239,8 @@ public class MetadataManager {
         boolean playing = Utils.isPlaying(state);
         List<Integer> compact = new ArrayList<>();
         builder.mActions.clear();
-        
+        boolean playPause = false;
+
         if (this.options != null) {
             List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
             if(notification != null) {
