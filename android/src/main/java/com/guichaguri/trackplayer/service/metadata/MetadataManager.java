@@ -32,6 +32,7 @@ import com.guichaguri.trackplayer.service.models.Track;
 import com.guichaguri.trackplayer.service.player.ExoPlayback;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.HashMap;
 
 /**
@@ -258,7 +259,7 @@ public class MetadataManager {
 
         if (this.options != null) {
             List<Integer> notificationCapabilities = this.options.getIntegerArrayList("notificationCapabilities");
-            if(notification != null) {
+            if(notificationCapabilities != null) {
                 controls = notificationCapabilities;
             }
         }
