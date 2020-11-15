@@ -269,7 +269,7 @@ public class MetadataManager {
         }
         // Adds the media buttons to the notification
         for (int control : controls) {
-            if(!playPause & (control == (int) PlaybackStateCompat.ACTION_PAUSE | control == (int) PlaybackStateCompat.ACTION_PLAY)) {
+            if(!playPause & ((long) control == PlaybackStateCompat.ACTION_PAUSE | control == PlaybackStateCompat.ACTION_PLAY)) {
                 playPause = true;
                 if (playing) {
                     addAction(this.controls.get(PlaybackStateCompat.ACTION_PAUSE), control, compact);
@@ -277,7 +277,7 @@ public class MetadataManager {
                     addAction(this.controls.get(PlaybackStateCompat.ACTION_PLAY), control, compact);
                 }
             } else {
-                addAction(this.controls.get((control)), control, compact);
+                addAction(this.controls.get((long) control), control, compact);
             }
         }
 
