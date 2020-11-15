@@ -32,7 +32,7 @@ import com.guichaguri.trackplayer.service.models.Track;
 import com.guichaguri.trackplayer.service.player.ExoPlayback;
 import java.util.ArrayList;
 import java.util.List;
-import android.util.Log;
+import java.util.HashMap;
 
 /**
  * @author Guichaguri
@@ -54,6 +54,8 @@ public class MetadataManager {
     private NotificationCompat.Builder builder;
 
     private Action previousAction, rewindAction, playAction, pauseAction, stopAction, forwardAction, nextAction;
+
+    private HashMap<Long, Action> controls = new HashMap<Long, Action>();
 
     public MetadataManager(MusicService service, MusicManager manager) {
         this.service = service;
@@ -136,6 +138,14 @@ public class MetadataManager {
                     getIcon(options, "forwardIcon", R.drawable.forward));
             nextAction = createAction(notification, PlaybackStateCompat.ACTION_SKIP_TO_NEXT, "Next",
                     getIcon(options, "nextIcon", R.drawable.next));
+            
+            this.controls.put(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, previousAction);
+            this.controls.put(PlaybackStateCompat.ACTION_REWIND, rewindAction);
+            this.controls.put(PlaybackStateCompat.ACTION_PAUSE, pauseAction);
+            this.controls.put(PlaybackStateCompat.ACTION_PLAY, playAction);
+            this.controls.put(PlaybackStateCompat.ACTION_STOP, stopAction);
+            this.controls.put(PlaybackStateCompat.ACTION_FAST_FORWARD, forwardAction);
+            this.controls.put(PlaybackStateCompat.ACTION_SKIP_TO_NEXT, nextAction);
 
             // Update the action mask for the compact view
             if(compact != null) {
@@ -238,63 +248,30 @@ public class MetadataManager {
         int state = playback.getState();
         boolean playing = Utils.isPlaying(state);
         List<Integer> compact = new ArrayList<>();
+            
         builder.mActions.clear();
         boolean playPause = false;
+        
+        List<Integer> controls = new ArrayList<Integer>(this.controls.keySet());
 
         if (this.options != null) {
-            List<Integer> notification = this.options.getIntegerArrayList("notificationCapabilities");
+            List<Integer> notificationCapabilities = this.options.getIntegerArrayList("notificationCapabilities");
             if(notification != null) {
-                // Adds the media buttons to the notification
-                for (int action : notification) {
-                    Log.d(Utils.LOG, "action: " + action);
-                    switch (action) {
-                        case (int) PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS:
-                            addAction(previousAction, action, compact);
-                            break;
-                        case (int) PlaybackStateCompat.ACTION_REWIND:
-                            addAction(rewindAction, action, compact);
-                            break;
-                        case (int) PlaybackStateCompat.ACTION_PAUSE:
-                        case (int) PlaybackStateCompat.ACTION_PLAY:
-                            if (playPause) {
-                                break;
-                            }
-                            playPause = true;
-                            if (playing) {
-                                addAction(pauseAction, action, compact);
-                            } else {
-                                addAction(playAction, action, compact);
-                            }
-                            break;
-                        case (int) PlaybackStateCompat.ACTION_FAST_FORWARD:
-                            addAction(forwardAction, action, compact);
-                            break;
-                        case (int) PlaybackStateCompat.ACTION_SKIP_TO_NEXT:
-                            addAction(nextAction, action, compact);
-                            break;
-                        case (int) PlaybackStateCompat.ACTION_STOP:
-                            addAction(stopAction, action, compact);
-                            break;
-                        default:
-                            break;
-                    }
+                controls = notificationCapabilities;
+            }
+        }
+        // Adds the media buttons to the notification
+        for (int control : controls) {
+            if(!playPause & (control == (int) PlaybackStateCompat.ACTION_PAUSE | control == (int) PlaybackStateCompat.ACTION_PLAY)) {
+                playPause = true;
+                if (playing) {
+                    addAction(this.controls.get(PlaybackStateCompat.ACTION_PAUSE), control, compact);
+                } else {
+                    addAction(this.controls.get(PlaybackStateCompat.ACTION_PLAY), control, compact);
                 }
-            }
-        } else {
-            // Adds the media buttons to the notification
-
-            addAction(previousAction, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, compact);
-            addAction(rewindAction, PlaybackStateCompat.ACTION_REWIND, compact);
-
-            if(playing) {
-                addAction(pauseAction, PlaybackStateCompat.ACTION_PAUSE, compact);
             } else {
-                addAction(playAction, PlaybackStateCompat.ACTION_PLAY, compact);
+                addAction(this.controls.get((control)), control, compact);
             }
-
-            addAction(stopAction, PlaybackStateCompat.ACTION_STOP, compact);
-            addAction(forwardAction, PlaybackStateCompat.ACTION_FAST_FORWARD, compact);
-            addAction(nextAction, PlaybackStateCompat.ACTION_SKIP_TO_NEXT, compact);
         }
 
         // Prevent the media style from being used in older Huawei devices that don't support custom styles
