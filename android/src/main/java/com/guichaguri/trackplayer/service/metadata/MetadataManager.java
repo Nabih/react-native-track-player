@@ -253,28 +253,28 @@ public class MetadataManager {
         boolean playPause = false;
 
         // Default controls based on original map
-        List<Integer> controls = new ArrayList<Integer>(this.controls.keySet());
+        List<Integer> capabilities = new ArrayList<Integer>(this.controls.keySet());
 
         if (this.options != null) {
             List<Integer> notificationCapabilities = this.options.getIntegerArrayList("notificationCapabilities");
             if(notificationCapabilities != null) {
-                controls = notificationCapabilities;
+                capabilities = notificationCapabilities;
             }
         }
         // Adds the media buttons to the notification
-        for (int control : controls) {
+        for (int capability : capabilities) {
+            Long control = (long) capability;
             if(control == PlaybackStateCompat.ACTION_PAUSE | control == PlaybackStateCompat.ACTION_PLAY) {
-                if (playPause) {
-                    continue;
-                }
-                playPause = true;
-                if (playing) {
-                    addAction(this.controls.get(PlaybackStateCompat.ACTION_PAUSE), control, compact);
-                } else {
-                    addAction(this.controls.get(PlaybackStateCompat.ACTION_PLAY), control, compact);
+                if (!playPause) {
+                    playPause = true;
+                    if (playing) {
+                        addAction(this.controls.get(PlaybackStateCompat.ACTION_PAUSE), control, compact);
+                    } else {
+                        addAction(this.controls.get(PlaybackStateCompat.ACTION_PLAY), control, compact);
+                    }
                 }
             } else {
-                addAction(this.controls.get(control), control, compact);
+                addAction(this.controls.get(control), (long) control, compact);
             }
         }
 
