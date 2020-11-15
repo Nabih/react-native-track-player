@@ -274,7 +274,7 @@ public class MetadataManager {
                     }
                 }
             } else {
-                addAction(this.controls.get(control), (long) control, compact);
+                addAction(this.controls.get(capability), control, compact);
             }
         }
 
