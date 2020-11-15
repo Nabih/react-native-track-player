@@ -127,26 +127,25 @@ public class MetadataManager {
 
             previousAction = createAction(notification, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, "Previous",
                     getIcon(options, "previousIcon", R.drawable.previous));
+            this.controls.put((int) PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, previousAction);
             rewindAction = createAction(notification, PlaybackStateCompat.ACTION_REWIND, "Rewind",
                     getIcon(options, "rewindIcon", R.drawable.rewind));
+            this.controls.put((int) PlaybackStateCompat.ACTION_REWIND, rewindAction);
             playAction = createAction(notification, PlaybackStateCompat.ACTION_PLAY, "Play",
                     getIcon(options, "playIcon", R.drawable.play));
+            this.controls.put((int) PlaybackStateCompat.ACTION_PLAY, playAction);
             pauseAction = createAction(notification, PlaybackStateCompat.ACTION_PAUSE, "Pause",
                     getIcon(options, "pauseIcon", R.drawable.pause));
+            this.controls.put((int) PlaybackStateCompat.ACTION_PAUSE, pauseAction);
             stopAction = createAction(notification, PlaybackStateCompat.ACTION_STOP, "Stop",
                     getIcon(options, "stopIcon", R.drawable.stop));
+            this.controls.put((int) PlaybackStateCompat.ACTION_STOP, stopAction);
             forwardAction = createAction(notification, PlaybackStateCompat.ACTION_FAST_FORWARD, "Forward",
                     getIcon(options, "forwardIcon", R.drawable.forward));
+            this.controls.put((int) PlaybackStateCompat.ACTION_FAST_FORWARD, forwardAction);
             nextAction = createAction(notification, PlaybackStateCompat.ACTION_SKIP_TO_NEXT, "Next",
                     getIcon(options, "nextIcon", R.drawable.next));
-            
-            this.controls.put(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS, previousAction);
-            this.controls.put(PlaybackStateCompat.ACTION_REWIND, rewindAction);
-            this.controls.put(PlaybackStateCompat.ACTION_PAUSE, pauseAction);
-            this.controls.put(PlaybackStateCompat.ACTION_PLAY, playAction);
-            this.controls.put(PlaybackStateCompat.ACTION_STOP, stopAction);
-            this.controls.put(PlaybackStateCompat.ACTION_FAST_FORWARD, forwardAction);
-            this.controls.put(PlaybackStateCompat.ACTION_SKIP_TO_NEXT, nextAction);
+            this.controls.put((int) PlaybackStateCompat.ACTION_SKIP_TO_NEXT, nextAction);
 
             // Update the action mask for the compact view
             if(compact != null) {
