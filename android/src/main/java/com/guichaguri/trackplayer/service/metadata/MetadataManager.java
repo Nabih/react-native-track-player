@@ -56,7 +56,7 @@ public class MetadataManager {
 
     private Action previousAction, rewindAction, playAction, pauseAction, stopAction, forwardAction, nextAction;
 
-    private HashMap<Long, Action> controls = new HashMap<Long, Action>();
+    private HashMap<Integer, Action> controls = new HashMap<Integer, Action>();
 
     public MetadataManager(MusicService service, MusicManager manager) {
         this.service = service;
@@ -253,13 +253,8 @@ public class MetadataManager {
         builder.mActions.clear();
         boolean playPause = false;
 
-        List<Long> defaultControls = new ArrayList<Long>(this.controls.keySet());
-
-        List<Integer> controls = new ArrayList<Integer>();
-
-        for(Long i: defaultControls){
-            controls.add(i.intValue());
-        }
+        // Default controls based on original map
+        List<Integer> controls = new ArrayList<Integer>(this.controls.keySet());
 
         if (this.options != null) {
             List<Integer> notificationCapabilities = this.options.getIntegerArrayList("notificationCapabilities");
@@ -269,7 +264,10 @@ public class MetadataManager {
         }
         // Adds the media buttons to the notification
         for (int control : controls) {
-            if(!playPause & ((long) control == PlaybackStateCompat.ACTION_PAUSE | control == PlaybackStateCompat.ACTION_PLAY)) {
+            if(control == PlaybackStateCompat.ACTION_PAUSE | control == PlaybackStateCompat.ACTION_PLAY) {
+                if (playPause) {
+                    continue;
+                }
                 playPause = true;
                 if (playing) {
                     addAction(this.controls.get(PlaybackStateCompat.ACTION_PAUSE), control, compact);
@@ -277,7 +275,7 @@ public class MetadataManager {
                     addAction(this.controls.get(PlaybackStateCompat.ACTION_PLAY), control, compact);
                 }
             } else {
-                addAction(this.controls.get((long) control), control, compact);
+                addAction(this.controls.get(control), control, compact);
             }
         }
 
