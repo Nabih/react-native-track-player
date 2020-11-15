@@ -252,7 +252,9 @@ public class MetadataManager {
         builder.mActions.clear();
         boolean playPause = false;
         
-        List<Integer> controls = new ArrayList<Integer>(this.controls.keySet());
+        Set<Long> controlKeys = this.controls.keySet(); 
+
+        List<Integer> controls = new ArrayList<>(controlKeys);
 
         if (this.options != null) {
             List<Integer> notificationCapabilities = this.options.getIntegerArrayList("notificationCapabilities");
